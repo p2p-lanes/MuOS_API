@@ -73,7 +73,14 @@ def get_applications_for_goodbye(db: Session):
     logger.info('Excluded application emails: %s', excluded_application_emails)
 
     today = current_time()
-    one_day_from_now = today + timedelta(days=1)
+    yesterday = today - timedelta(days=1)
+    logger.info('Yesterday %s', yesterday)
+
+    main_month_product = (
+        db.query(Product)
+        .filter(Product.category == 'month', Product.attendee_category == 'main')
+        .first()
+    )
 
     applications = (
         db.query(Application)
@@ -81,9 +88,9 @@ def get_applications_for_goodbye(db: Session):
         .filter(
             Application.popup_city_id == popup_id,
             Application.email.notin_(excluded_application_emails),
-            # This ensures ALL products for the application have end_date before one day from now
+            # This ensures ALL products for the application have end_date before yesterday
             ~Application.attendees.any(
-                Attendee.products.any(Product.end_date >= one_day_from_now)
+                Attendee.products.any(Product.end_date >= yesterday)
             ),
             # This ensures the application has at least one product
             Application.attendees.any(Attendee.products.any()),
@@ -91,10 +98,33 @@ def get_applications_for_goodbye(db: Session):
         .distinct()
         .all()
     )
-    logger.info('Total applications found: %s', len(applications))
-    logger.info('Applications ids to process: %s', [a.id for a in applications])
 
-    return applications
+    logger.info('Total applications found: %s', len(applications))
+
+    if main_month_product.end_date < yesterday:
+        applications_to_process = applications
+    else:
+        applications_to_process = []
+        for application in applications:
+            total_products = 0
+            weekend_products = 0
+            for attendee in application.attendees:
+                for product in attendee.products:
+                    total_products += 1
+                    if 'weekend' in product.slug.lower():
+                        weekend_products += 1
+            if weekend_products < total_products:
+                applications_to_process.append(application)
+
+    logger.info('Applications to process: %s', len(applications_to_process))
+    for application in applications_to_process:
+        logger.info('Application %s %s', application.id, application.email)
+        for attendee in application.attendees:
+            logger.info('Attendee %s %s', attendee.name, attendee.email)
+            for product in attendee.products:
+                logger.info('Product %s %s', product.name, product.end_date)
+
+    return applications_to_process
 
 
 def goodbye_emails(db: Session):
