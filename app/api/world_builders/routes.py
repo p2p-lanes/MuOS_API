@@ -27,4 +27,4 @@ def create_world_builder(
     current_user: TokenData = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return world_builder_crud.create(db=db, obj_in=world_builder, user=current_user)
+    return world_builder_crud.create(db=db, obj=world_builder, user=current_user)
