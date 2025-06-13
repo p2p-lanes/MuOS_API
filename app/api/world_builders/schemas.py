@@ -5,10 +5,10 @@ from pydantic import BaseModel, ConfigDict
 
 
 class WorldBuilderBase(BaseModel):
-    first_name: str
-    last_name: str
     email: str
     world_address: str
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
     phone: Optional[str] = None
     location: Optional[str] = None
     personal_links: Optional[str] = None

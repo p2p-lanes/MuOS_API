@@ -14,10 +14,10 @@ class WorldBuilder(Base):
         unique=True,
         index=True,
     )
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=False)
     email = Column(String, nullable=False)
     world_address = Column(String, nullable=False)
+    first_name = Column(String)
+    last_name = Column(String)
     phone = Column(String)
     location = Column(String)
     personal_links = Column(String)
