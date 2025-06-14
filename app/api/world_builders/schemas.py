@@ -49,5 +49,9 @@ class WorldBuilder(WorldBuilderBase):
     )
 
 
+class WorldBuilderScore(BaseModel):
+    score: int
+
+
 class WorldBuilderFilter(BaseModel):
     email: Optional[str] = None
