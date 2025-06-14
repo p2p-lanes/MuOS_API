@@ -43,7 +43,7 @@ class CRUDWorldBuilder(
         tx_count_hex = response.json()['result']
         tx_count = int(tx_count_hex, 16)
         logger.info('Transaction count for %s: %s', address, tx_count)
-        return schemas.WorldBuilderScore(builder_score=tx_count)
+        return schemas.WorldBuilderScore(score=tx_count)
 
 
 world_builder = CRUDWorldBuilder(models.WorldBuilder)
