@@ -43,36 +43,34 @@ This repository contains the code for the **EdgeOS API**, a FastAPI-based applic
 
 
 ## Environment Variables
-Create a `.env` file in the root directory with the following content:
+Create a `.env` file in the root directory by copying the template:
 
-```env
-ENVIRONMENT=develop # Or testing, production
-
-DB_USERNAME=myuser
-DB_PASSWORD=secret
-DB_HOST=postgres # Should match the service name in docker-compose.yml
-DB_PORT=5432
-DB_NAME=edgeos_db
-NOCO_DB_NAME=noco_db
-
-BACKEND_URL=http://localhost:8000
-FRONTEND_URL=http://localhost:3000
-
-NOCODB_URL=...
-NOCODB_TOKEN=...
-NOCODB_WEBHOOK_SECRET=...
-
-SECRET_KEY=your_super_secret_and_long_random_key # Generate a strong random key
-COUPON_API_KEY=your_coupon_api_key # Generate a strong random key
-ATTENDEES_API_KEY=your_attendees_api_key # Generate a strong random key
-GROUPS_API_KEY=your_groups_api_key # Generate a strong random key
-
-POSTMARK_API_TOKEN=your_postmark_api_token
-EMAIL_FROM_ADDRESS=...
-EMAIL_FROM_NAME=...
-EMAIL_REPLY_TO=...
-SIMPLEFI_API_URL=https://api.simplefi.tech
+```bash
+cp env.example .env
 ```
+
+Then edit the `.env` file with your actual values. The `env.example` file contains all the required environment variables with example values and comments explaining their purpose.
+
+Some of these values — especially the `*_API_KEY` and `SECRET_KEY` — **must be strong, random, and unique**.
+You can generate secure values using one of the following commands:
+
+```sh
+# Option 1 (hex-encoded 32-byte string)
+openssl rand -hex 32
+
+# Option 2 (URL-safe base64 string)
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+For example:
+```
+SECRET_KEY=60ecaea3d7f8135dec2f8750c62c250b024cf7d832ef69036141a5e9b0eef909
+COUPON_API_KEY=37983bf05533a9f8528240bdc64df33333700eb84b3d739cb390cd6ba98d2a57
+ATTENDEES_API_KEY=...
+GROUPS_API_KEY=...
+```
+
+⚠️ Do not reuse the same value for multiple keys. Each one must be unique.
 
 
 ## Running the Application
