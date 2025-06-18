@@ -46,8 +46,7 @@ def login(
     db: Session = Depends(get_db),
 ):
     try:
-        decoded_email = unquote(email)
-        email = validate_email(decoded_email)
+        _, email = validate_email(unquote(email))
     except PydanticCustomError:
         raise HTTPException(status_code=400, detail='Invalid email format')
 
@@ -104,8 +103,7 @@ def get_citizen_by_email(
     db: Session = Depends(get_db),
 ):
     try:
-        decoded_email = unquote(email)
-        email = validate_email(decoded_email)
+        _, email = validate_email(unquote(email))
     except PydanticCustomError:
         raise HTTPException(status_code=400, detail='Invalid email')
 
