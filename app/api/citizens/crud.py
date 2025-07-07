@@ -151,34 +151,31 @@ class CRUDCitizen(
         self,
         db: Session,
         *,
-        email: str,
-        popup_slug: Optional[str] = None,
-        use_code: bool = False,
-        signature: Optional[str] = None,
-        world_address: Optional[str] = None,
+        data: schemas.Authenticate,
     ) -> models.Citizen:
-        citizen = self.get_by_email(db, email)
+        citizen = self.get_by_email(db, data.email)
 
-        code = random.randint(100000, 999999) if use_code else None
-        code_expiration = current_time() + timedelta(minutes=5) if use_code else None
+        code = random.randint(100000, 999999) if data.use_code else None
+        code_expiration = (
+            current_time() + timedelta(minutes=5) if data.use_code else None
+        )
 
-        if signature and world_address:
-            if not verify_safe_signature(world_address, signature):
+        if data.signature and data.world_address:
+            if not verify_safe_signature(data.world_address, data.signature):
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail='Invalid signature',
                 )
-            world_app = True
+            data.world_redirect = True
         else:
-            world_app = False
-            world_address = None
+            data.world_address = None
 
         if not citizen:
             to_create = schemas.InternalCitizenCreate(
-                primary_email=email,
+                primary_email=data.email,
                 code=code,
                 code_expiration=code_expiration,
-                world_address=world_address,
+                world_address=data.world_address,
             )
             citizen = self.create(db, to_create)
         else:
@@ -191,10 +188,10 @@ class CRUDCitizen(
 
         if code:
             email_log.send_mail(
-                email,
+                data.email,
                 event=EmailEvent.AUTH_CITIZEN_BY_CODE.value,
-                popup_slug=popup_slug,
-                params={'code': code, 'email': email},
+                popup_slug=data.popup_slug,
+                params={'code': code, 'email': data.email},
                 spice=citizen.spice,
                 entity_type='citizen',
                 entity_id=citizen.id,
@@ -202,7 +199,11 @@ class CRUDCitizen(
             )
         else:
             email_log.send_login_mail(
-                email, citizen.spice, citizen.id, popup_slug, world_app
+                data.email,
+                citizen.spice,
+                citizen.id,
+                data.popup_slug,
+                data.world_redirect,
             )
 
         return {'message': 'Mail sent successfully'}

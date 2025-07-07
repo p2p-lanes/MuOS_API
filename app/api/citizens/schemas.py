@@ -12,6 +12,7 @@ class Authenticate(BaseModel):
     use_code: Optional[bool] = False
     signature: Optional[str] = None
     world_address: Optional[str] = None
+    world_redirect: bool = False
 
     model_config = ConfigDict(
         str_strip_whitespace=True,

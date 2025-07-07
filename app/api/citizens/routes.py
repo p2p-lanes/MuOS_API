@@ -32,11 +32,7 @@ def authenticate(
     logger.info('Authenticating citizen: %s', data)
     return citizen_crud.authenticate(
         db=db,
-        email=data.email,
-        popup_slug=data.popup_slug,
-        use_code=data.use_code,
-        signature=data.signature,
-        world_address=data.world_address,
+        data=data,
     )
 
 
