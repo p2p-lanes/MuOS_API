@@ -76,6 +76,8 @@ class ApplicationBaseCommon(BaseModel):
     scholarship_details: Optional[str] = None
     scholarship_video_url: Optional[str] = None
 
+    residencies_interested_in: Optional[list[str]] = None
+
     requested_discount: Optional[bool] = None
     status: Optional[ApplicationStatus] = None
 

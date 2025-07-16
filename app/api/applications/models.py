@@ -82,6 +82,8 @@ class Application(Base):
     scholarship_details = Column(String)
     scholarship_video_url = Column(String)
 
+    _residencies_interested_in = Column(String)
+
     send_note_to_applicant = Column(String)
 
     timour_review = Column(String)
@@ -147,6 +149,20 @@ class Application(Base):
     @info_not_shared.setter
     def info_not_shared(self, value: Optional[Union[str, list[str]]]) -> None:
         self._info_not_shared = ','.join(value) if isinstance(value, list) else value
+
+    @property
+    def residencies_interested_in(self) -> Optional[list[str]]:
+        if not self._residencies_interested_in:
+            return []
+        return [
+            i.strip() for i in self._residencies_interested_in.split(',') if i.strip()
+        ]
+
+    @residencies_interested_in.setter
+    def residencies_interested_in(self, value: Optional[Union[str, list[str]]]) -> None:
+        self._residencies_interested_in = (
+            ','.join(value) if isinstance(value, list) else value
+        )
 
     @property
     def discount_assigned(self) -> Optional[int]:
