@@ -82,7 +82,7 @@ class Application(Base):
     scholarship_details = Column(String)
     scholarship_video_url = Column(String)
 
-    _residencies_interested_in = Column(String)
+    _residencies_interested_in = Column('residencies_interested_in', String)
 
     send_note_to_applicant = Column(String)
 
