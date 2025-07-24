@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, version='0.1.1')
 
 # Include routers
 app.include_router(applications_router, prefix='/applications', tags=['Applications'])
