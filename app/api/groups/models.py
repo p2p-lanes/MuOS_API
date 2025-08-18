@@ -76,5 +76,13 @@ class Group(Base):
     def popup_name(self) -> str:
         return self.popup_city.name
 
+    @property
+    def express_checkout_background(self) -> str:
+        return self.popup_city.express_checkout_background
+
+    @property
+    def web_url(self) -> str:
+        return self.popup_city.web_url
+
     def is_leader(self, citizen_id: int) -> bool:
         return any(leader.id == citizen_id for leader in self.leaders)

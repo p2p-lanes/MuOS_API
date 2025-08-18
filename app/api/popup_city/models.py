@@ -41,6 +41,7 @@ class PopUpCity(Base):
     location = Column(String)
     passes_description = Column(String)
     image_url = Column(String)
+    express_checkout_background = Column(String)
     web_url = Column(String)
     email_image = Column(String)
     contact_email = Column(String)
