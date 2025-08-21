@@ -12,6 +12,7 @@ class PopUpCityBase(BaseModel):
     passes_description: Optional[str] = None
     image_url: Optional[str] = None
     express_checkout_background: Optional[str] = None
+    ticketing_banner_description: Optional[str] = None
     start_date: Optional[datetime] = None
     end_date: Optional[datetime] = None
     clickable_in_portal: Optional[bool] = False

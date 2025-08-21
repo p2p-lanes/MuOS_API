@@ -45,6 +45,7 @@ class PopUpCity(Base):
     web_url = Column(String)
     email_image = Column(String)
     contact_email = Column(String)
+    ticketing_banner_description = Column(String)
     blog_url = Column(String)
     twitter_url = Column(String)
     start_date = Column(DateTime)
