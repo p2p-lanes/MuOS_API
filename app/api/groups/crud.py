@@ -149,6 +149,7 @@ class CRUDGroup(CRUDBase[models.Group, schemas.GroupBase, schemas.GroupBase]):
                 organization=application.organization,
                 role=application.role,
                 gender=application.gender,
+                local_resident=application.local_resident,
                 products=products,
             )
             d = application.accepted_at or application.submitted_at or datetime.min
@@ -204,6 +205,7 @@ class CRUDGroup(CRUDBase[models.Group, schemas.GroupBase, schemas.GroupBase]):
                 organization=member.organization,
                 gender=member.gender,
                 telegram=member.telegram,
+                local_resident=member.local_resident,
             )
             logger.info('Application not found, creating: %s', new_application)
             application = applications_crud.create(db, new_application, SYSTEM_TOKEN)
@@ -217,6 +219,7 @@ class CRUDGroup(CRUDBase[models.Group, schemas.GroupBase, schemas.GroupBase]):
             application.organization = member.organization
             application.gender = member.gender
             application.telegram = member.telegram
+            application.local_resident = member.local_resident
             application.submitted_at = current_time()
             applications_crud.update_citizen_profile(db, application)
 
@@ -248,6 +251,7 @@ class CRUDGroup(CRUDBase[models.Group, schemas.GroupBase, schemas.GroupBase]):
             organization=application.organization,
             role=application.role,
             gender=application.gender,
+            local_resident=application.local_resident,
         )
 
     def create_members_batch(
@@ -350,6 +354,7 @@ class CRUDGroup(CRUDBase[models.Group, schemas.GroupBase, schemas.GroupBase]):
         application.organization = member.organization
         application.gender = member.gender
         application.telegram = member.telegram
+        application.local_resident = member.local_resident
         application.submitted_at = current_time()
 
         db.commit()
@@ -362,6 +367,7 @@ class CRUDGroup(CRUDBase[models.Group, schemas.GroupBase, schemas.GroupBase]):
             first_name=application.first_name,
             last_name=application.last_name,
             email=application.email,
+            local_resident=application.local_resident,
         )
 
     def remove_member(
