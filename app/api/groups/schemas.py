@@ -25,6 +25,7 @@ class GroupMember(BaseModel, GroupMemberValidatorMixin):
     organization: Optional[str] = None
     role: Optional[str] = None
     gender: Optional[str] = None
+    local_resident: Optional[bool] = None
 
     @field_validator('first_name', 'last_name', 'email')
     @classmethod
@@ -44,6 +45,7 @@ class GroupMemberUpdate(BaseModel, GroupMemberValidatorMixin):
     organization: Optional[str] = None
     role: Optional[str] = None
     gender: Optional[str] = None
+    local_resident: Optional[bool] = None
 
 
 class GroupMemberBatch(BaseModel):
