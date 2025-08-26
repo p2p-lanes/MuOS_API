@@ -22,6 +22,10 @@ class EmailEvent(str, Enum):
     CHECK_IN = 'check-in'
     ABANDONED_CART = 'abandoned-cart'
     INCREASE_REMINDER = 'increase-reminder'
+    WELCOME_FAMILIES = 'welcome-families'
+    APPLICATION_APPROVED = 'application-approved'
+    APPLICATION_APPROVED_SCHOLARSHIP = 'application-approved-scholar'
+    APPLICATION_APPROVED_NON_SCHOLARSHIP = 'application-approved-nonscholar'
 
 
 class EmailLogFilter(BaseModel):

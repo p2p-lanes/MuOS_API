@@ -1,4 +1,3 @@
-import json
 from datetime import timedelta
 
 import requests
@@ -10,7 +9,7 @@ from app.api.applications.models import Application
 from app.api.applications.schemas import ApplicationStatus
 from app.api.email_logs.crud import email_log
 from app.api.email_logs.models import EmailLog
-from app.api.email_logs.schemas import EmailStatus
+from app.api.email_logs.schemas import EmailEvent, EmailStatus
 from app.api.payments.crud import payment as payment_crud
 from app.api.payments.schemas import PaymentFilter, PaymentUpdate
 from app.api.webhooks import schemas
@@ -188,6 +187,24 @@ async def send_email_webhook(
         )
 
         processed_ids.append(row['id'])
+
+        is_approved_event = event in [
+            EmailEvent.APPLICATION_APPROVED.value,
+            EmailEvent.APPLICATION_APPROVED_SCHOLARSHIP.value,
+            EmailEvent.APPLICATION_APPROVED_NON_SCHOLARSHIP.value,
+        ]
+        is_patagonia = application.popup_city.slug == 'edge-patagonia'
+
+        if is_approved_event and is_patagonia and application.brings_kids:
+            email_log.send_mail(
+                receiver_mail=row['email'],
+                event=EmailEvent.WELCOME_FAMILIES.value,
+                popup_city=application.popup_city,
+                params=params,
+                send_at=send_at,
+                entity_type='application',
+                entity_id=application.id,
+            )
 
     return {'message': 'Email sent successfully'}
 
