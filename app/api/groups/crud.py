@@ -454,7 +454,7 @@ class CRUDGroup(CRUDBase[models.Group, schemas.GroupBase, schemas.GroupBase]):
                 name=f'{application.first_name} {application.last_name} Invite List',
                 slug=slug,
                 description=description,
-                discount_percentage=20,
+                discount_percentage=0,
                 popup_city_id=application.popup_city_id,
                 max_members=None,
                 welcome_message=welcome_message,
