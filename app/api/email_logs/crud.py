@@ -180,7 +180,7 @@ class CRUDEmailLog(
         except requests.exceptions.HTTPError as e:
             logger.error('Failed to send email %s: %s', receiver_mail, str(e))
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail='Failed to send email',
             )
 
