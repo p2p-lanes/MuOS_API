@@ -184,6 +184,7 @@ class CRUDCitizen(
             if code:
                 citizen.code = code
                 citizen.code_expiration = code_expiration
+                citizen.third_party_app = None
             db.commit()
             db.refresh(citizen)
 
@@ -206,6 +207,43 @@ class CRUDCitizen(
                 data.popup_slug,
                 data.world_redirect,
             )
+
+        return {'message': 'Mail sent successfully'}
+
+    def authenticate_third_party(
+        self,
+        db: Session,
+        *,
+        data: schemas.AuthenticateThirdParty,
+    ) -> dict:
+        logger.info('Authenticate third-party request: %s', data)
+        citizen = self.get_by_email(db, data.email)
+        if not citizen:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Citizen not found',
+            )
+
+        citizen.code = random.randint(100000, 999999)
+        citizen.code_expiration = current_time() + timedelta(minutes=5)
+        citizen.third_party_app = data.app_name
+        db.commit()
+        db.refresh(citizen)
+
+        params = {
+            'code': citizen.code,
+            'email': data.email,
+            'app_name': data.app_name,
+        }
+        email_log.send_mail(
+            data.email,
+            event=EmailEvent.AUTH_CITIZEN_BY_CODE.value,
+            popup_slug=data.popup_slug,
+            params=params,
+            entity_type='citizen',
+            entity_id=citizen.id,
+            citizen_id=citizen.id,
+        )
 
         return {'message': 'Mail sent successfully'}
 

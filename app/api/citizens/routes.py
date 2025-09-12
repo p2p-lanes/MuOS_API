@@ -36,6 +36,18 @@ def authenticate(
     )
 
 
+@router.post('/authenticate-third-party')
+def authenticate_third_party(
+    data: schemas.AuthenticateThirdParty,
+    db: Session = Depends(get_db),
+):
+    logger.info('Authenticating third-party citizen: %s', data)
+    return citizen_crud.authenticate_third_party(
+        db=db,
+        data=data,
+    )
+
+
 @router.post('/login')
 def login(
     email: str,

@@ -35,6 +35,25 @@ class Authenticate(BaseModel):
         return Web3.to_checksum_address(value)
 
 
+class AuthenticateThirdParty(BaseModel):
+    email: str
+    popup_slug: Optional[str] = None
+    app_name: str
+
+    model_config = ConfigDict(
+        str_strip_whitespace=True,
+        str_to_lower=True,
+    )
+
+    @field_validator('email')
+    @classmethod
+    def decode_email(cls, value: str) -> str:
+        if not value:
+            raise ValueError('Email cannot be empty')
+        _, email = validate_email(unquote(value))
+        return email
+
+
 class CitizenBase(BaseModel):
     primary_email: str
     secondary_email: Optional[str] = None

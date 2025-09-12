@@ -64,6 +64,7 @@ class Citizen(Base):
     spice = Column(String)
     code = Column(Integer)
     code_expiration = Column(DateTime)
+    third_party_app = Column(String)
 
     applications: Mapped[List['Application']] = relationship(
         'Application', back_populates='citizen'
@@ -95,6 +96,8 @@ class Citizen(Base):
 
     def get_authorization(self) -> Token:
         data = {'citizen_id': self.id, 'email': self.primary_email}
+        if self.third_party_app:
+            data['third_party_app'] = self.third_party_app
         return Token(
             access_token=create_access_token(data=data),
             token_type='Bearer',
