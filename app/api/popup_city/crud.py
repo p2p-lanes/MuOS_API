@@ -81,17 +81,24 @@ class CRUDPopUpCity(
         )
         for application in results:
             logger.info('Sending increase reminder email to %s', application.email)
-            email_log_crud.send_mail(
-                receiver_mail=application.email,
-                event=EmailEvent.INCREASE_REMINDER,
-                popup_city=popup,
-                params={
-                    'first_name': application.first_name,
-                    'ticketing_url': ticketing_url,
-                },
-                entity_type='application',
-                entity_id=application.id,
-            )
+            try:
+                email_log_crud.send_mail(
+                    receiver_mail=application.email,
+                    event=EmailEvent.INCREASE_REMINDER,
+                    popup_city=popup,
+                    params={
+                        'first_name': application.first_name,
+                        'ticketing_url': ticketing_url,
+                    },
+                    entity_type='application',
+                    entity_id=application.id,
+                )
+            except Exception as e:
+                logger.error(
+                    'Failed to send increase reminder email to %s: %s',
+                    application.email,
+                    str(e),
+                )
 
         logger.info('Sent %s increase reminder emails', len(results))
 
