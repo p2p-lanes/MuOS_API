@@ -151,6 +151,7 @@ class CRUDPayment(
     def _send_payment_confirmed_email(
         self, payment: models.Payment, group: Optional[models.Group]
     ) -> None:
+        logger.info('Sending payment confirmed email for payment %s', payment)
         ticket_list = []
         if payment.products_snapshot:
             for product_snapshot in payment.products_snapshot:
