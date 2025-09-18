@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Literal, Optional, Union
+from typing import List, Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, field_validator
 
@@ -148,6 +148,13 @@ class ApplicationWithAuth(Application):
 HIDDEN_VALUE = '*'
 
 
+class AttendeeInfo(BaseModel):
+    name: str
+    category: str
+    gender: Optional[str] = None
+    email: Optional[str] = None
+
+
 class AttendeesDirectory(BaseModel):
     first_name: Union[Optional[str], Literal['*']]
     last_name: Union[Optional[str], Literal['*']]
@@ -158,7 +165,15 @@ class AttendeesDirectory(BaseModel):
     organization: Union[Optional[str], Literal['*']]
     personal_goals: Union[Optional[str], Literal['*']]
     residence: Union[Optional[str], Literal['*']]
+    age: Union[Optional[str], Literal['*']]
+    gender: Union[Optional[str], Literal['*']]
+    social_media: Union[Optional[str], Literal['*']]
+    builder_boolean: Union[Optional[bool], Literal['*']]
+    builder_description: Union[Optional[str], Literal['*']]
+    residencies_interested_in: Union[Optional[List[str]], Literal['*']]
+    residencies_text: Union[Optional[str], Literal['*']]
     participation: Union[Optional[list[Product]], Literal['*']]
+    associated_attendees: Union[Optional[list[AttendeeInfo]], Literal['*']]
 
     model_config = ConfigDict(
         str_strip_whitespace=True,

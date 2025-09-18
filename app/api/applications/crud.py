@@ -7,7 +7,7 @@ from typing import List, Optional, Tuple, Union
 from fastapi import HTTPException, status
 from sqlalchemy import and_, case, desc, exists, not_, or_
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session, contains_eager
+from sqlalchemy.orm import Session, selectinload
 
 from app.api.applications import models, schemas
 from app.api.attendees import schemas as attendees_schemas
@@ -380,7 +380,7 @@ class CRUDApplication(
                 brings_kids_order,
             )
             .join(models.Application.attendees.and_(Attendee.category == 'main'))
-            .options(contains_eager(models.Application.attendees.of_type(Attendee)))
+            .options(selectinload(models.Application.attendees))
             .filter(
                 models.Application.popup_city_id == popup_city_id,
                 # Check if the attendee has any products using EXISTS
@@ -468,7 +468,7 @@ class CRUDApplication(
         for result in query_results:
             # The Application object is the first element
             application: models.Application = result[0]
-            main_attendee = application.attendees[0]
+            main_attendee = application.get_main_attendee()
 
             check_in, check_out = None, None
             for p in main_attendee.products:
@@ -476,6 +476,17 @@ class CRUDApplication(
                     check_in = p.start_date
                 if not check_out or (p.end_date and p.end_date > check_out):
                     check_out = p.end_date
+
+            associated_attendees = [
+                {
+                    'name': attendee.name,
+                    'category': attendee.category,
+                    'gender': attendee.gender,
+                    'email': attendee.email,
+                }
+                for attendee in application.attendees
+                if attendee.category != 'main'
+            ]
 
             a = {
                 'first_name': application.first_name,
@@ -487,6 +498,14 @@ class CRUDApplication(
                 'organization': application.organization,
                 'personal_goals': application.personal_goals,
                 'residence': application.residence,
+                'age': application.age,
+                'gender': application.gender,
+                'social_media': application.social_media,
+                'builder_boolean': application.builder_boolean,
+                'builder_description': application.builder_description,
+                'residencies_interested_in': application.residencies_interested_in,
+                'residencies_text': application.residencies_text,
+                'associated_attendees': associated_attendees,
                 'participation': main_attendee.products,
                 'check_in': check_in,
                 'check_out': check_out,
