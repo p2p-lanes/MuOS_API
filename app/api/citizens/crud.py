@@ -362,6 +362,9 @@ class CRUDCitizen(
                 end_date = min(product.end_date, current_time())
                 total_days += (end_date - product.start_date).days + 1
 
+        if total_days == 0:
+            return None
+
         return {
             'id': popup.id,
             'popup_name': popup.name,
