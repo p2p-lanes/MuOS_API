@@ -1,8 +1,13 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, relationship
 
 from app.core.database import Base
 from app.core.utils import current_time
+
+if TYPE_CHECKING:
+    from app.api.citizens.models import Citizen
 
 
 class Achievement(Base):
