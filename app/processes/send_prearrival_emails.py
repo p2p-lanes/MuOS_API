@@ -126,6 +126,7 @@ def get_applications_for_prearrival(db: Session):
         .filter(
             PopUpCity.slug == POPUP_CITY_SLUG,
             Application.email.notin_(excluded_emails),
+            Application.email == 'francisco@muvinai.com',
         )
         .distinct()
         .all()
@@ -174,7 +175,6 @@ def process_application_for_prearrival(application: Application):
 
     logger.info('Sending pre-arrival email to %s', application.email)
 
-    return
     email_log_crud.send_mail(
         receiver_mail=application.email,
         event=EmailEvent.PRE_ARRIVAL.value,
@@ -203,6 +203,16 @@ def send_prearrival_emails(db: Session):
 
 
 def main():
+    dt = current_time()
+    if not (22 <= dt.hour <= 23):
+        logger.info(
+            'Not running pre-arrival email process at %s',
+            dt.strftime('%Y-%m-%d %H:%M:%S'),
+        )
+        logger.info('Sleeping for 30 minutes...')
+        time.sleep(1 * 30 * 60)
+        return
+
     with SessionLocal() as db:
         send_prearrival_emails(db)
     logger.info('Pre-arrival email process completed. Sleeping for 1 hour...')
