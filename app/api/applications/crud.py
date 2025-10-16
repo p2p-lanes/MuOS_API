@@ -471,7 +471,14 @@ class CRUDApplication(
         attendees = []
         for result in query_results:
             # Unpack the query results for clarity
-            application, info_not_shared_order, brings_kids_order, picture_url, first_name, last_name = result
+            (
+                application,
+                info_not_shared_order,
+                brings_kids_order,
+                picture_url,
+                first_name,
+                last_name,
+            ) = result
             main_attendee = application.get_main_attendee()
 
             check_in, check_out = None, None
