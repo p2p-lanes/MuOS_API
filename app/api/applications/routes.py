@@ -107,7 +107,7 @@ def get_attendees_directory_csv(
     )
 
 
-@router.get('/world-addresses/{popup_city_id}/csv')
+@router.get('/world-addresses/{popup_city_id}')
 def get_world_addresses_csv(
     popup_city_id: int,
     x_api_key: str = Header(...),
@@ -158,25 +158,7 @@ def get_world_addresses_csv(
     world_addresses = [world_address for (world_address,) in world_addresses]
     logger.info('Final world addresses count: %s', len(world_addresses))
 
-    output = io.StringIO()
-    writer = csv.writer(output)
-
-    # Write header
-    writer.writerow(['World Address'])
-
-    # Write data rows - only world addresses
-    for world_address in world_addresses:
-        writer.writerow([world_address])
-
-    csv_content = output.getvalue()
-
-    return Response(
-        content=csv_content,
-        media_type='text/csv',
-        headers={
-            'Content-Disposition': f'attachment; filename="world_addresses_popup_{popup_city_id}.csv"'
-        },
-    )
+    return {'data': world_addresses}
 
 
 @router.get('/{application_id}', response_model=schemas.Application)

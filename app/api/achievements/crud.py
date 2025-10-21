@@ -4,6 +4,7 @@ from typing import List, Optional
 import requests
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
+from app.api.achievements.schemas import BadgeCode
 
 from app.api.achievements import models, schemas
 from app.api.base_crud import CRUDBase
@@ -85,6 +86,29 @@ class CRUDAchievement(
 
         return achievement
 
+    def create_badge(self, db: Session, obj: schemas.AchievementCreate, user: TokenData) -> models.Achievement:
+        """Create a new badge achievement"""
+        # Validate badge_type is provided and valid
+        if obj.badge_type is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='badge_type is required when achievement_type is "badge"',
+            )
+        
+        if obj.badge_type not in [code.value for code in BadgeCode]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='Invalid badge_type. Must be one of the valid badge codes.',
+            )
+        else:
+            obj.badge_type = BadgeCode(obj.badge_type).name
+
+        obj_data = obj.model_dump()
+        obj_data['sent_at'] = current_time()
+
+        logger.info(obj_data)
+        return super().create(db=db, obj=schemas.AchievementBase(**obj_data))
+
     def _check_permission(self, db_obj: models.Achievement, user: TokenData) -> bool:
         """Check if user can access this achievement"""
         return user == SYSTEM_TOKEN
@@ -116,10 +140,10 @@ class CRUDAchievement(
             .all()
         )
 
-        # Get received achievements with sender citizen data
+        # Get received achievements with sender citizen data (using LEFT JOIN to include NULL sender_id)
         received_achievements_with_citizens = (
             db.query(self.model, citizen_models.Citizen)
-            .join(
+            .outerjoin(
                 citizen_models.Citizen,
                 self.model.sender_id == citizen_models.Citizen.id,
             )
@@ -147,16 +171,24 @@ class CRUDAchievement(
         # Structure the received achievements data to include sender info
         received_achievements = []
         for achievement, citizen in received_achievements_with_citizens:
-            achievement_dict = {
-                'achievement': achievement,
-                'citizen': {
-                    'id': citizen.id,
-                    'first_name': citizen.first_name,
-                    'last_name': citizen.last_name,
-                    'primary_email': citizen.primary_email,
-                    'world_address': citizen.world_address,
-                },
-            }
+            if citizen is not None:
+                # Achievement has a sender
+                achievement_dict = {
+                    'achievement': achievement,
+                    'citizen': {
+                        'id': citizen.id,
+                        'first_name': citizen.first_name,
+                        'last_name': citizen.last_name,
+                        'primary_email': citizen.primary_email,
+                        'world_address': citizen.world_address,
+                    },
+                }
+            else:
+                # Achievement has no sender (sender_id is NULL)
+                achievement_dict = {
+                    'achievement': achievement,
+                    'citizen': None,
+                }
             received_achievements.append(achievement_dict)
 
         query = {
