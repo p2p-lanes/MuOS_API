@@ -423,14 +423,18 @@ class CRUDCitizen(
 
         # Get all linked citizen IDs (includes self)
         from app.api.account_clusters.crud import get_linked_citizen_ids
+
         linked_citizen_ids = get_linked_citizen_ids(db, user.citizen_id)
         logger.info('Profile aggregating data from citizens: %s', linked_citizen_ids)
 
         # Aggregate applications from ALL linked citizens
         from app.api.applications.models import Application
-        all_applications = db.query(Application).filter(
-            Application.citizen_id.in_(linked_citizen_ids)
-        ).all()
+
+        all_applications = (
+            db.query(Application)
+            .filter(Application.citizen_id.in_(linked_citizen_ids))
+            .all()
+        )
 
         popups_data = []
         total_days = 0
@@ -449,9 +453,11 @@ class CRUDCitizen(
 
         # Count the amount of attendees with a payment for the ambassador group
         # Aggregate from ALL linked citizens
-        all_linked_citizens = db.query(models.Citizen).filter(
-            models.Citizen.id.in_(linked_citizen_ids)
-        ).all()
+        all_linked_citizens = (
+            db.query(models.Citizen)
+            .filter(models.Citizen.id.in_(linked_citizen_ids))
+            .all()
+        )
 
         attendee_ids = set()
         for linked_citizen in all_linked_citizens:

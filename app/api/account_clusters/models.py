@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, UniqueConstraint
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, relationship
 
 from app.core.database import Base
 from app.core.utils import current_time
@@ -21,7 +21,7 @@ class AccountClusterMember(Base):
     created_at = Column(DateTime, default=current_time)
 
     # Relationships
-    citizen: 'Citizen' = relationship('Citizen')
+    citizen: Mapped['Citizen'] = relationship('Citizen')
 
 
 class ClusterJoinRequest(Base):
@@ -38,13 +38,14 @@ class ClusterJoinRequest(Base):
     )
     verification_code = Column(String, nullable=False, unique=True, index=True)
     code_expiration = Column(DateTime, nullable=False)
-    status = Column(
-        String, nullable=False, default='pending'
-    )  # pending, verified, expired
+    # pending, verified, expired
+    status = Column(String, nullable=False, default='pending')
     created_at = Column(DateTime, default=current_time)
 
     # Relationships
-    initiator: 'Citizen' = relationship(
+    initiator: Mapped['Citizen'] = relationship(
         'Citizen', foreign_keys=[initiator_citizen_id]
     )
-    target: 'Citizen' = relationship('Citizen', foreign_keys=[target_citizen_id])
+    target: Mapped['Citizen'] = relationship(
+        'Citizen', foreign_keys=[target_citizen_id]
+    )

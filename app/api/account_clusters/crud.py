@@ -152,7 +152,7 @@ def initiate_link_request(
 
     # Generate verification code
     code = generate_verification_code()
-    expiration = datetime.utcnow() + timedelta(minutes=5)
+    expiration = datetime.utcnow() + timedelta(minutes=15)
 
     # Create join request
     request = models.ClusterJoinRequest(
@@ -176,20 +176,28 @@ def initiate_link_request(
             entity_id=request.id,
         )
         logger.info(
-            f'Sent cluster join verification email to {target_email} for request {request.id}'
+            'Sent cluster join verification email to %s for request %s',
+            target_email,
+            request.id,
         )
     except Exception as e:
-        logger.error(f'Failed to send verification email: {str(e)}')
-        # Don't fail the request if email fails
-        pass
+        logger.error('Failed to send verification email: %s', str(e))
+        # Delete the request since we couldn't send the email
+        db.delete(request)
+        db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f'Failed to send verification email to {target_email}. Please try again later.',
+        )
 
     return schemas.ClusterJoinRequestResponse(
-        message=f'Verification code sent to {target_email}', request_id=request.id
+        message=f'Verification code sent to {target_email}',
+        request_id=request.id,
     )
 
 
 def verify_and_complete_link(
-    db: Session, verification_code: str
+    db: Session, verification_code: str, current_user_id: int
 ) -> schemas.VerifyJoinResponse:
     """
     Verify the code and complete the account linking.
@@ -222,6 +230,13 @@ def verify_and_complete_link(
 
     initiator_id = request.initiator_citizen_id
     target_id = request.target_citizen_id
+
+    # SECURITY: Only the initiator can verify the code
+    if current_user_id != initiator_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='Only the account that initiated the link request can verify the code',
+        )
 
     # Get existing clusters
     initiator_cluster = get_cluster_id_for_citizen(db, initiator_id)
@@ -284,9 +299,7 @@ def leave_cluster(db: Session, citizen_id: int) -> schemas.LeaveClusterResponse:
 
     logger.info(f'Citizen {citizen_id} left cluster {cluster_id}')
 
-    return schemas.LeaveClusterResponse(
-        message='Successfully left the account cluster'
-    )
+    return schemas.LeaveClusterResponse(message='Successfully left the account cluster')
 
 
 def cleanup_expired_requests(db: Session):

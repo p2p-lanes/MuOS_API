@@ -23,7 +23,9 @@ def initiate_account_link(
     Sends a verification code to the target account's email.
     """
     return crud.initiate_link_request(
-        db=db, initiator_id=current_user.citizen_id, target_email=request.target_email
+        db=db,
+        initiator_id=current_user.citizen_id,
+        target_email=request.target_email,
     )
 
 
@@ -38,11 +40,18 @@ def verify_account_link(
     """
     Verify the code and complete the account linking.
     The verification code is sent to the target account's email.
+    User must be logged into either the initiator or target account.
     """
-    return crud.verify_and_complete_link(db=db, verification_code=request.verification_code)
+    return crud.verify_and_complete_link(
+        db=db,
+        verification_code=request.verification_code,
+        current_user_id=current_user.citizen_id,
+    )
 
 
-@router.get('/my-cluster', response_model=schemas.ClusterInfo, status_code=status.HTTP_200_OK)
+@router.get(
+    '/my-cluster', response_model=schemas.ClusterInfo, status_code=status.HTTP_200_OK
+)
 def get_my_cluster(
     current_user: TokenData = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -65,7 +74,9 @@ def get_my_cluster(
 
 
 @router.delete(
-    '/leave', response_model=schemas.LeaveClusterResponse, status_code=status.HTTP_200_OK
+    '/leave',
+    response_model=schemas.LeaveClusterResponse,
+    status_code=status.HTTP_200_OK,
 )
 def leave_account_cluster(
     current_user: TokenData = Depends(get_current_user),
