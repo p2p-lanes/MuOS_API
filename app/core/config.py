@@ -66,4 +66,5 @@ class Settings:
     TELEGRAM_CHAT_ID: str = os.getenv('TELEGRAM_CHAT_ID')
     TELEGRAM_MESSAGE_THREAD_ID: str = os.getenv('TELEGRAM_MESSAGE_THREAD_ID')
 
+
 settings = Settings()
