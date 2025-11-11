@@ -299,6 +299,7 @@ class CRUDAchievement(
         url = f'https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage'
         data = {
             'chat_id': settings.TELEGRAM_CHAT_ID,
+            'message_thread_id': settings.TELEGRAM_MESSAGE_THREAD_ID,
             'text': notification_text,
         }
 
