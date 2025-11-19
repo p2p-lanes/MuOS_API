@@ -274,19 +274,27 @@ class CRUDAchievement(
             notification_text = 'Someone sent gratitude (privately) ⭐️'
         else:
             # ✅ public
-            if not sender:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail='sender is required for public messages',
-                )
-            if not receiver:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail='receiver is required for public messages',
-                )
-
-            sender_name = f'{sender.first_name} {sender.last_name}'
-            receiver_name = f'{receiver.first_name} {receiver.last_name}'
+            # Use "Anonymous" only if both first_name and last_name are None
+            if sender and (sender.first_name or sender.last_name):
+                name_parts = []
+                if sender.first_name:
+                    name_parts.append(sender.first_name)
+                if sender.last_name:
+                    name_parts.append(sender.last_name)
+                sender_name = ' '.join(name_parts)
+            else:
+                sender_name = 'Anonymous'
+            
+            if receiver and (receiver.first_name or receiver.last_name):
+                name_parts = []
+                if receiver.first_name:
+                    name_parts.append(receiver.first_name)
+                if receiver.last_name:
+                    name_parts.append(receiver.last_name)
+                receiver_name = ' '.join(name_parts)
+            else:
+                receiver_name = 'Anonymous'
+            
             notification_text = f'{sender_name} sent gratitude to {receiver_name} ⭐️'
 
         logger.info(
