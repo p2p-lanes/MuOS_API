@@ -14,6 +14,7 @@ from app.api.citizens import models, schemas
 from app.api.citizens.schemas import CitizenPoaps, CitizenPoapsByPopup, PoapClaim
 from app.api.email_logs.crud import email_log
 from app.api.email_logs.schemas import EmailEvent
+from app.core.cache import TTLCache
 from app.core.config import settings
 from app.core.edge_wrapped import generate_edge_wrapped
 from app.core.locks import DistributedLock
@@ -24,6 +25,7 @@ from app.core.world import verify_safe_signature
 
 POAP_TOKEN_ID = 'poap'
 POAP_REFRESH_LOCK = DistributedLock('poap_token_refresh')
+PROFILE_CACHE = TTLCache(expiry=timedelta(minutes=10))
 
 
 def _refresh_poap_token():
@@ -418,7 +420,20 @@ class CRUDCitizen(
             'image_url': application.popup_city.image_url,
         }
 
+    def invalidate_profile_cache(self, citizen_id: int) -> None:
+        """Invalidate the cached profile for a citizen."""
+        cache_key = f'citizen_profile:{citizen_id}'
+        PROFILE_CACHE.delete(cache_key)
+        logger.info('Invalidated profile cache for citizen: %s', citizen_id)
+
     def get_profile(self, db: Session, user: TokenData) -> schemas.CitizenProfile:
+        # Check cache first
+        cache_key = f'citizen_profile:{user.citizen_id}'
+        cached_profile = PROFILE_CACHE.get(cache_key)
+        if cached_profile:
+            logger.info('Returning cached profile for citizen: %s', user.citizen_id)
+            return cached_profile
+
         logger.info('Getting profile for citizen: %s', user.citizen_id)
         citizen: models.Citizen = self.get(db, user.citizen_id, user)
 
@@ -477,13 +492,19 @@ class CRUDCitizen(
 
         referral_count = len(attendee_ids)
         citizen_data = schemas.Citizen.model_validate(citizen).model_dump()
-        return schemas.CitizenProfile(
+        profile = schemas.CitizenProfile(
             **citizen_data,
             linked_emails=linked_emails,
             popups=popups_data,
             total_days=total_days,
             referral_count=referral_count,
         )
+
+        # Cache the profile
+        PROFILE_CACHE.set(cache_key, profile)
+        logger.info('Cached profile for citizen: %s', user.citizen_id)
+
+        return profile
 
     def _get_events_count(self, linked_emails: List[str]) -> int:
         """Get the count of events attended by a citizen based on their linked emails.
