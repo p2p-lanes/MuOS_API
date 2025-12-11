@@ -434,9 +434,10 @@ class CRUDCitizen(
         citizen: models.Citizen = self.get(db, user.citizen_id, user)
         # Check cache first
         cache_key = f'citizen_profile:{user.citizen_id}'
-        cached_profile = PROFILE_CACHE.get(cache_key)
+        cached_profile: schemas.CitizenProfile = PROFILE_CACHE.get(cache_key)
         if cached_profile:
             logger.info('Returning cached profile for citizen: %s', user.citizen_id)
+            cached_profile.edge_mapped_sent = citizen.edge_mapped_sent
             return citizen, cached_profile
 
         # Get all linked citizen IDs (includes self)
