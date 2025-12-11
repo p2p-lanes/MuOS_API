@@ -171,22 +171,23 @@ def get_profile(
     db: Session = Depends(get_db),
     current_user: TokenData = Depends(get_current_user),
 ):
-    return citizen_crud.get_profile(db=db, user=current_user)
+    _, profile = citizen_crud.get_profile(db=db, user=current_user)
+    return profile
 
 
-@router.get('/edge-wrapped')
-def get_edge_wrapped(
+@router.get('/edge-mapped')
+def get_edge_mapped(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: TokenData = Depends(get_current_user),
 ):
-    image_path = citizen_crud.get_edge_wrapped(db=db, user=current_user)
+    image_path = citizen_crud.get_edge_mapped(db=db, user=current_user)
     background_tasks.add_task(os.remove, image_path)
 
     return FileResponse(
         image_path,
         media_type='image/png',
-        headers={'Content-Disposition': 'inline; filename="edge-wrapped.png"'},
+        headers={'Content-Disposition': 'inline; filename="edge-mapped.png"'},
     )
 
 

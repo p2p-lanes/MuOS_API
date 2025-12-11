@@ -402,7 +402,7 @@ def create_framed_image(center_image_path, background_path, popups, output_path)
     logger.info('Framed image saved as %s', output_path_png)
 
 
-def _generate_edge_wrapped(
+def _generate_edge_mapped(
     ai_image_path: str,
     villages_count: int,
     days_count: int,
@@ -413,7 +413,7 @@ def _generate_edge_wrapped(
     final_output: Optional[str] = None,
 ):
     """
-    Main function to generate both Edge Wrapped images
+    Main function to generate both Edge Mapped images
 
     Args:
         ai_image_path: Path to the AI-generated center image
@@ -461,7 +461,7 @@ def _get_ai_image(codes: Set[str]) -> str:
     raise ValueError(f'No image found for codes: {codes}')
 
 
-def generate_edge_wrapped(
+def generate_edge_mapped(
     popups: List[str],
     days_count: int,
     events_count: int,
@@ -488,7 +488,7 @@ def generate_edge_wrapped(
     villages_count = len(locations)
     ai_image_path = _get_ai_image(codes)
 
-    intermediate_output, final_output = _generate_edge_wrapped(
+    intermediate_output, final_output = _generate_edge_mapped(
         ai_image_path,
         villages_count,
         days_count,

@@ -133,6 +133,7 @@ class CitizenUpdate(BaseModel):
 
 class Citizen(CitizenBase):
     id: int
+    edge_mapped_sent: bool = False
 
     model_config = ConfigDict(
         from_attributes=True,

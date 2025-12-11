@@ -32,6 +32,7 @@ class EmailEvent(str, Enum):
     PRE_ARRIVAL_24H = 'pre-arrival-24h'
     FEEDBACK_REQUEST = 'feedback-request'
     LINK_ACCOUNTS_VERIFICATION = 'link-accounts-verification'
+    EDGE_MAPPED_SENT = 'edge-mapped-sent'
 
 
 class EmailLogFilter(BaseModel):
