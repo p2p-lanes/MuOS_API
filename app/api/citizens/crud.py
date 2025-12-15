@@ -455,21 +455,28 @@ class CRUDCitizen(
             .all()
         )
 
-        popups_data = []
+        popups_data = {}
         total_days = 0
         for application in all_applications:
             logger.info('Getting popup data for application: %s', application.id)
             _popup_data = self._get_popup_data(application)
             if not _popup_data:
                 continue
+            if (
+                _popup_data['id'] in popups_data
+                and popups_data[_popup_data['id']]['total_days']
+                > _popup_data['total_days']
+            ):
+                continue
             _popup_data['application'] = {
                 'id': application.id,
                 'residence': application.residence,
                 'personal_goals': application.personal_goals,
             }
-            popups_data.append(_popup_data)
+            popups_data[_popup_data['id']] = _popup_data
             total_days += _popup_data['total_days']
 
+        popups_data = list(popups_data.values())
         # Count the amount of attendees with a payment for the ambassador group
         # Aggregate from ALL linked citizens
         all_linked_citizens = (
