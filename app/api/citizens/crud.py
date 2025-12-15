@@ -585,13 +585,7 @@ class CRUDCitizen(
                         content_id='cid:island.png',
                         content=image_b64,
                         content_type='image/png',
-                    ),
-                    EmailAttachment(
-                        name='my-edge-mapped.png',
-                        content_id='cid:my-edge-mapped.png',
-                        content=image_b64,
-                        content_type='image/png',
-                    ),
+                    )
                 ],
             )
             citizen.edge_mapped_sent = True
