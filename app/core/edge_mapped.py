@@ -4,6 +4,7 @@ from typing import List, Optional, Set
 from uuid import uuid4
 
 from cairosvg import svg2png
+from fastapi import HTTPException, status
 from PIL import Image, ImageDraw, ImageFont
 
 from app.core.logger import logger
@@ -486,6 +487,11 @@ def generate_edge_mapped(
                 codes.add(code)
                 break
 
+    if not codes or not locations:
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST,
+            'No edge mapped available',
+        )
     villages_count = len(locations)
     ai_image_path = _get_ai_image(codes)
 
