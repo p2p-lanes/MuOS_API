@@ -352,7 +352,18 @@ class CRUDCitizen(
             .all()
         )
 
-        response = CitizenPoaps(results=[])
+        if len(linked_citizen_ids) == 1:
+            emails = [citizen.primary_email]
+        else:
+            emails = [
+                citizen.primary_email
+                for citizen in db.query(models.Citizen)
+                .filter(models.Citizen.id.in_(linked_citizen_ids))
+                .all()
+            ]
+
+        response = CitizenPoaps(emails=emails, results=[])
+        processed_poaps = set()
         for application in all_applications:
             poaps = []
             for attendee in application.attendees:
@@ -361,6 +372,14 @@ class CRUDCitizen(
                     poap_data = _get_poap_qr(qr_hash, db)
                     if not poap_data:
                         continue
+                    key = (
+                        attendee.category,
+                        attendee.email,
+                        application.popup_city_id,
+                    )
+                    if key in processed_poaps:
+                        continue
+                    processed_poaps.add(key)
                     poaps.append(
                         PoapClaim(
                             attendee_id=attendee.id,

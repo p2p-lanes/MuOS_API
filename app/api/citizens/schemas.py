@@ -195,4 +195,5 @@ class CitizenPoapsByPopup(BaseModel):
 
 
 class CitizenPoaps(BaseModel):
+    emails: List[str]
     results: List[CitizenPoapsByPopup]
