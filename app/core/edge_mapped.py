@@ -479,14 +479,14 @@ def generate_edge_mapped(
     ]
 
     locations = []
-    codes = []
+    codes = set()
     for name, code in popups_map:
         for popup in popups:
             if name.lower() in popup.lower():
                 if name not in locations:
                     locations.append(name)
-                if code not in codes:
-                    codes.append(code)
+                codes.add(code)
+                break
 
     if not codes or not locations:
         raise HTTPException(
