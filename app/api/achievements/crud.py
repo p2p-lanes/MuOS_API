@@ -4,9 +4,9 @@ from typing import List, Optional
 import requests
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from app.api.achievements.schemas import BadgeCode
 
 from app.api.achievements import models, schemas
+from app.api.achievements.schemas import BadgeCode
 from app.api.base_crud import CRUDBase
 from app.api.citizens import models as citizen_models
 from app.core.config import settings

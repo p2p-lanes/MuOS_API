@@ -1,21 +1,25 @@
 import csv
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
 from app.api.applications import crud as application_crud
 from app.api.applications import schemas as app_schemas
+from app.api.attendees.models import Attendee  # noqa
 from app.api.citizens import crud as citizen_crud
 from app.api.citizens import schemas as citizen_schemas
 from app.api.citizens.models import Citizen
+from app.api.coupon_codes.models import CouponCode  # noqa
+from app.api.groups.models import Group  # noqa
+from app.api.organizations.models import Organization  # noqa
+from app.api.payments.models import Payment  # noqa
 from app.api.popup_city import crud as popup_crud
 from app.api.popup_city import schemas as popup_schemas
 from app.api.popup_city.models import EmailTemplate, PopUpCity
 from app.api.products import crud as product_crud
 from app.api.products import schemas as product_schemas
-from app.core import models
 from app.core.config import settings
 from app.core.database import SessionLocal, create_db
 from app.core.security import SYSTEM_TOKEN, TokenData

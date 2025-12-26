@@ -83,7 +83,7 @@ dependencies = [
     "ujson==5.10.0",
     "urllib3==2.2.3",
     "uvicorn==0.32.1",
-    "uvloop==0.21.0",
+    "uvloop==0.21.0; sys_platform != 'win32'",
     "watchfiles==1.0.0",
     "wcwidth==0.2.13",
     "web3==7.12.0",

@@ -1,14 +1,11 @@
-import csv
-import io
-
 from fastapi import APIRouter, Depends, Header, HTTPException, Response, status
-from sqlalchemy.orm import Session
 from sqlalchemy import or_
-from app.api.citizens.models import Citizen
+from sqlalchemy.orm import Session
 
-from app.api.applications import models, schemas
+from app.api.applications import schemas
 from app.api.applications.crud import application as application_crud
 from app.api.attendees import schemas as attendees_schemas
+from app.api.citizens.models import Citizen
 from app.api.common.schemas import PaginatedResponse, PaginationMetadata
 from app.core.config import settings
 from app.core.database import get_db

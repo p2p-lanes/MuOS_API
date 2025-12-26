@@ -3,7 +3,7 @@ from io import BytesIO
 from typing import List, Optional, Set
 from uuid import uuid4
 
-from cairosvg import svg2png
+# from cairosvg import svg2png
 from fastapi import HTTPException, status
 from PIL import Image, ImageDraw, ImageFont
 
@@ -115,21 +115,21 @@ def add_text_to_image(
         )
 
     # --- Add logo to bottom right corner ---
-    try:
-        # Convert SVG to PNG in memory (scaled)
-        logo_height = int(80 * scale_factor)  # Desired height for the logo
-        png_data = svg2png(url='static/images/edge-logo.svg', output_height=logo_height)
-        logo = Image.open(BytesIO(png_data)).convert('RGBA')
+    # try:
+    #     # Convert SVG to PNG in memory (scaled)
+    #     logo_height = int(80 * scale_factor)  # Desired height for the logo
+    #     png_data = svg2png(url='static/images/edge-logo.svg', output_height=logo_height)
+    #     logo = Image.open(BytesIO(png_data)).convert('RGBA')
 
-        # Calculate position (bottom right with padding, scaled)
-        logo_padding = int(40 * scale_factor)
-        logo_x = img_width - logo.width - logo_padding
-        logo_y = img_height - logo.height - logo_padding
+    #     # Calculate position (bottom right with padding, scaled)
+    #     logo_padding = int(40 * scale_factor)
+    #     logo_x = img_width - logo.width - logo_padding
+    #     logo_y = img_height - logo.height - logo_padding
 
-        # Paste logo onto image
-        img.paste(logo, (logo_x, logo_y), logo)
-    except Exception as e:
-        logger.warning('Could not add logo: %s', e)
+    #     # Paste logo onto image
+    #     img.paste(logo, (logo_x, logo_y), logo)
+    # except Exception as e:
+    #     logger.warning('Could not add logo: %s', e)
 
     # --- Save ---
     img = img.convert('RGB')  # Convert back to RGB
