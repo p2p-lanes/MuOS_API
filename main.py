@@ -32,26 +32,20 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan, version='0.1.1')
 
 # Include routers
-app.include_router(
-    account_clusters_router, prefix='/account-clusters', tags=['Account Clusters']
-)
-app.include_router(achievements_router, prefix='/achievements', tags=['Achievements'])
-app.include_router(applications_router, prefix='/applications', tags=['Applications'])
-app.include_router(attendees_router, prefix='/attendees', tags=['Attendees'])
-app.include_router(check_in_router, prefix='/check-in', tags=['Check In'])
-app.include_router(citizens_router, prefix='/citizens', tags=['Citizens'])
-app.include_router(coupon_codes_router, prefix='/coupon-codes', tags=['Coupon Codes'])
-app.include_router(groups_router, prefix='/groups', tags=['Groups'])
-app.include_router(payments_router, prefix='/payments', tags=['Payments'])
-app.include_router(popup_cities_router, prefix='/popups', tags=['Popups'])
-app.include_router(
-    organizations_router, prefix='/organizations', tags=['Organizations']
-)
-app.include_router(products_router, prefix='/products', tags=['Products'])
-app.include_router(webhooks_router, prefix='/webhooks', tags=['Webhooks'])
-app.include_router(
-    world_builders_router, prefix='/world-builders', tags=['World Builders']
-)
+app.include_router(account_clusters_router)
+app.include_router(achievements_router)
+app.include_router(applications_router)
+app.include_router(attendees_router)
+app.include_router(check_in_router)
+app.include_router(citizens_router)
+app.include_router(coupon_codes_router)
+app.include_router(groups_router)
+app.include_router(payments_router)
+app.include_router(popup_cities_router)
+app.include_router(organizations_router)
+app.include_router(products_router)
+app.include_router(webhooks_router)
+app.include_router(world_builders_router)
 
 origins = ['*']
 app.add_middleware(

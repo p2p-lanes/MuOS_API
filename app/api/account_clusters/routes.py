@@ -5,7 +5,7 @@ from app.api.account_clusters import crud, schemas
 from app.core.database import get_db
 from app.core.security import TokenData, get_current_user
 
-router = APIRouter()
+router = APIRouter(prefix='/account-clusters', tags=['Account Clusters'])
 
 
 @router.post(

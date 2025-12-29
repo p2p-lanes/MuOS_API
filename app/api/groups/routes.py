@@ -11,10 +11,10 @@ from app.core.database import get_db
 from app.core.logger import logger
 from app.core.security import TokenData, get_current_user
 
-router = APIRouter()
+router = APIRouter(prefix='/groups', tags=['Groups'])
 
 
-@router.get('/', response_model=list[schemas.Group])
+@router.get('', response_model=list[schemas.Group])
 def get_groups(
     current_user: TokenData = Depends(get_current_user),
     filters: schemas.GroupFilter = Depends(),

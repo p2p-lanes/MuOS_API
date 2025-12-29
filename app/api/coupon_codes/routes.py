@@ -8,10 +8,10 @@ from app.core.database import get_db
 from app.core.logger import logger
 from app.core.security import TokenData, get_current_user
 
-router = APIRouter()
+router = APIRouter(prefix='/coupon-codes', tags=['Coupon Codes'])
 
 
-@router.get('/', response_model=schemas.CouponCode)
+@router.get('', response_model=schemas.CouponCode)
 def get_coupon_code(
     current_user: TokenData = Depends(get_current_user),
     code: str = Query(),
@@ -25,7 +25,7 @@ def get_coupon_code(
     )
 
 
-@router.post('/', response_model=schemas.CouponCode)
+@router.post('', response_model=schemas.CouponCode)
 def create_coupon_code(
     coupon_code: schemas.CouponCodeCreate,
     x_api_key: str = Header(...),

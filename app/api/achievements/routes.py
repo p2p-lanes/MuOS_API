@@ -2,16 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.api.achievements import schemas
-
 from app.api.achievements.crud import achievement as achievement_crud
 from app.core.database import get_db
 from app.core.security import TokenData, get_current_user
 
-router = APIRouter()
+router = APIRouter(prefix='/achievements', tags=['Achievements'])
 
 
 @router.post(
-    '/', response_model=schemas.Achievement, status_code=status.HTTP_201_CREATED
+    '', response_model=schemas.Achievement, status_code=status.HTTP_201_CREATED
 )
 def create_achievement(
     achievement: schemas.AchievementCreate,
@@ -30,7 +29,7 @@ def create_achievement(
     return achievement_crud.create(db=db, obj=achievement, user=current_user)
 
 
-@router.get('/', response_model=schemas.AchievementResponse)
+@router.get('', response_model=schemas.AchievementResponse)
 def get_achievements(
     current_user: TokenData = Depends(get_current_user),
     filters: schemas.AchievementFilter = Depends(),

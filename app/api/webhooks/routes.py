@@ -21,7 +21,7 @@ from app.core.logger import logger
 from app.core.security import TokenData
 from app.core.utils import current_time
 
-router = APIRouter()
+router = APIRouter(prefix='/webhooks', tags=['Webhooks'])
 
 
 @router.post('/update_status', status_code=status.HTTP_200_OK)

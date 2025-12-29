@@ -6,7 +6,7 @@ from app.api.organizations import schemas
 from app.core.database import get_db
 from app.core.security import TokenData, get_current_user
 
-router = APIRouter()
+router = APIRouter(prefix='/organizations', tags=['Organizations'])
 
 
 @router.get('/organizations', response_model=list[schemas.Organization])

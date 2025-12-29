@@ -6,10 +6,10 @@ from app.api.world_builders.crud import world_builder as world_builder_crud
 from app.core.config import settings
 from app.core.database import get_db
 
-router = APIRouter()
+router = APIRouter(prefix='/world-builders', tags=['World Builders'])
 
 
-@router.post('/', response_model=schemas.WorldBuilder)
+@router.post('', response_model=schemas.WorldBuilder)
 def create_world_builder(
     world_builder: schemas.WorldBuilderCreate,
     x_api_key: str = Header(...),

@@ -7,10 +7,10 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.security import TokenData, get_current_user
 
-router = APIRouter()
+router = APIRouter(prefix='/popups', tags=['Popups'])
 
 
-@router.get('/', response_model=list[schemas.PopUpCity])
+@router.get('', response_model=list[schemas.PopUpCity])
 def get_popup_cities(
     current_user: TokenData = Depends(get_current_user),
     skip: int = 0,

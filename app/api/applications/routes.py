@@ -12,11 +12,11 @@ from app.core.database import get_db
 from app.core.logger import logger
 from app.core.security import TokenData, get_current_user
 
-router = APIRouter()
+router = APIRouter(prefix='/applications', tags=['Applications'])
 
 
 @router.post(
-    '/',
+    '',
     response_model=schemas.Application,
     status_code=status.HTTP_201_CREATED,
 )
@@ -29,7 +29,7 @@ def create_application(
     return application_crud.create(db=db, obj=application, user=current_user)
 
 
-@router.get('/', response_model=list[schemas.Application])
+@router.get('', response_model=list[schemas.Application])
 def get_applications(
     current_user: TokenData = Depends(get_current_user),
     filters: schemas.ApplicationFilter = Depends(),

@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.logger import logger
 
-router = APIRouter()
+router = APIRouter(prefix='/attendees', tags=['Attendees'])
 
 
 # Search for attendees by email

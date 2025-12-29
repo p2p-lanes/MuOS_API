@@ -26,7 +26,7 @@ from app.core.logger import logger
 from app.core.security import TokenData, get_current_user
 from app.core.world import verify_safe_signature
 
-router = APIRouter()
+router = APIRouter(prefix='/citizens', tags=['Citizens'])
 
 
 @router.post('/signup', response_model=schemas.Citizen)
@@ -141,7 +141,7 @@ def logout(
 
 
 # Get all citizens
-@router.get('/', response_model=list[schemas.Citizen])
+@router.get('', response_model=list[schemas.Citizen])
 def get_citizens(
     current_user: TokenData = Depends(get_current_user),
     filters: schemas.CitizenFilter = Depends(),

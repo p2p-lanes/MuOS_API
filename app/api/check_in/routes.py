@@ -6,7 +6,7 @@ from app.api.check_in.crud import check_in as check_in_crud
 from app.core.config import settings
 from app.core.database import get_db
 
-router = APIRouter()
+router = APIRouter(prefix='/check-in', tags=['Check In'])
 
 
 @router.post('/qr', response_model=schemas.CheckInResponse)
