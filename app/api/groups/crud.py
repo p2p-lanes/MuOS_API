@@ -424,9 +424,9 @@ class CRUDGroup(CRUDBase[models.Group, schemas.GroupBase, schemas.GroupBase]):
         self, db: Session, application: ApplicationModel
     ) -> Optional[models.Group]:
         popup_city = application.popup_city
-        if popup_city.slug != 'edge-patagonia':
-            logger.info('Ambassador group not available for this popup city')
-            return None
+        # if popup_city.slug != 'edge-patagonia':
+        #     logger.info('Ambassador group not available for this popup city')
+        #     return None
 
         existing_group = (
             db.query(self.model)
