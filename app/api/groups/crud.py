@@ -445,7 +445,7 @@ class CRUDGroup(CRUDBase[models.Group, schemas.GroupBase, schemas.GroupBase]):
             logger.info('Ambassador group slug already exists: %s', slug)
             slug = f'{popup_city.prefix}-{generate_random_string(length=4)}'
 
-        description = 'You\'re invited to skip the application process and proceed directly to checkout. Provide your information below to secure your ticket(s) to <a href="https://www.edgecity.live/patagonia" target="_blank" style="color: #3366FF;">Edge Patagonia 2025</a>!'
+        description = f'You\'re invited to skip the application process and proceed directly to checkout. Provide your information below to secure your ticket(s) to <a href="https://www.themu.simplefi.tech" target="_blank" style="color: #3366FF;">{popup_city.name}</a>!'
         welcome_message = f'This is a personal invite link from {application.first_name} {application.last_name}.'
 
         group = self.create(
