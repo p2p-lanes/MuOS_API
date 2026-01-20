@@ -95,6 +95,11 @@ class ApplicationBaseCommon(BaseModel):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
+    current_building: Optional[str] = None
+    experience_goals: Optional[str] = None
+    proud_projects: Optional[str] = None
+    other_interests: Optional[str] = None
+
     model_config = ConfigDict(
         str_strip_whitespace=True,
     )

@@ -137,6 +137,11 @@ class Application(Base):
     created_by = Column(String)
     updated_by = Column(String)
 
+    current_building = Column(String)
+    experience_goals = Column(String)
+    proud_projects = Column(String)
+    other_interests = Column(String)
+
     __mapper_args__ = {'exclude_properties': ['citizen', 'popup_city']}
 
     __table_args__ = (
