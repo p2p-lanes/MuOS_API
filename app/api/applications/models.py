@@ -89,12 +89,9 @@ class Application(Base):
 
     send_note_to_applicant = Column(String)
 
-    timour_review = Column(String)
-    janine_review = Column(String)
-    tela_review = Column(String)
-    sophie_review = Column(String)
-    devon_review = Column(String)
-    lina_review = Column(String)
+    sun_review = Column(String)
+    xiaoyu_review = Column(String)
+    frank_review = Column(String)
 
     auto_approved = Column(Boolean, nullable=False, default=False)
     not_attending = Column(Boolean, nullable=False, default=False)
@@ -202,12 +199,9 @@ class Application(Base):
     status = synonym('_status', descriptor=property(get_status, set_status))
 
     def clean_reviews(self) -> None:
-        self.timour_review = None
-        self.janine_review = None
-        self.tela_review = None
-        self.sophie_review = None
-        self.devon_review = None
-        self.lina_review = None
+        self.sun_review = None
+        self.xiaoyu_review = None
+        self.frank_review = None
 
     def get_products(self) -> List['Product']:
         return [product for attendee in self.attendees for product in attendee.products]
