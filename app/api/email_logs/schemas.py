@@ -33,6 +33,8 @@ class EmailEvent(str, Enum):
     FEEDBACK_REQUEST = 'feedback-request'
     LINK_ACCOUNTS_VERIFICATION = 'link-accounts-verification'
     EDGE_MAPPED_SENT = 'edge-mapped-sent'
+    APPLICATION_REJECTED = 'application-rejected'
+    APPLICATION_REMINDER = 'purchase-reminder'
 
 
 class EmailLogFilter(BaseModel):
