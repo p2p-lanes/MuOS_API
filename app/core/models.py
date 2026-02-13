@@ -13,7 +13,7 @@ from app.api.groups.models import Group
 from app.api.organizations.models import Organization
 from app.api.payments.models import Payment, PaymentProduct
 from app.api.popup_city.models import PopUpCity
-from app.api.products.models import Product
+from app.api.products.models import Product, ProductAllowedCitizen
 from app.api.world_builders.models import WorldBuilder
 
 # Re-export all models
@@ -35,5 +35,6 @@ __all__ = [
     'PaymentProduct',
     'PopUpCity',
     'Product',
+    'ProductAllowedCitizen',
     'WorldBuilder',
 ]

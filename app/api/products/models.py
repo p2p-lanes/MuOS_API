@@ -11,6 +11,13 @@ if TYPE_CHECKING:
     from app.api.payments.models import PaymentProduct
 
 
+class ProductAllowedCitizen(Base):
+    __tablename__ = 'product_allowed_citizens'
+
+    product_id = Column(Integer, ForeignKey('products.id'), primary_key=True)
+    citizen_id = Column(Integer, ForeignKey('humans.id'), primary_key=True)
+
+
 class Product(Base):
     __tablename__ = 'products'
 
@@ -46,6 +53,7 @@ class Product(Base):
     payment_products: Mapped[List['PaymentProduct']] = relationship(
         'PaymentProduct', back_populates='product'
     )
+    allowed_citizens = relationship('ProductAllowedCitizen', backref='product')
 
     created_at = Column(DateTime, default=current_time)
     updated_at = Column(DateTime, default=current_time, onupdate=current_time)
