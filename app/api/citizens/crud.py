@@ -1,4 +1,3 @@
-import base64
 import random
 from datetime import timedelta
 from typing import List, Optional, Union
@@ -15,10 +14,9 @@ from app.api.base_crud import CRUDBase
 from app.api.citizens import models, schemas
 from app.api.citizens.schemas import CitizenPoaps, CitizenPoapsByPopup, PoapClaim
 from app.api.email_logs.crud import email_log
-from app.api.email_logs.schemas import EmailAttachment, EmailEvent
+from app.api.email_logs.schemas import EmailEvent
 from app.core.cache import TTLCache
 from app.core.config import settings
-from app.core.edge_mapped import generate_edge_mapped
 from app.core.locks import DistributedLock
 from app.core.logger import logger
 from app.core.security import SYSTEM_TOKEN, TokenData
@@ -594,43 +592,6 @@ class CRUDCitizen(
         except Exception as e:
             logger.error('Unexpected error fetching events count: %s', e)
             return 0
-
-    def get_edge_mapped(self, db: Session, user: TokenData) -> str:
-        citizen, profile = self.get_profile(db, user)
-        popups = [p.popup_name for p in profile.popups]
-
-        events_count = self._get_events_count(profile.linked_emails)
-
-        image_path = generate_edge_mapped(
-            popups,
-            profile.total_days,
-            events_count,
-        )
-        if not citizen.edge_mapped_sent:
-            with open(image_path, 'rb') as image_file:
-                image_b64 = base64.b64encode(image_file.read()).decode('utf-8')
-
-            email_log.send_mail(
-                citizen.primary_email,
-                event=EmailEvent.EDGE_MAPPED_SENT.value,
-                params={'first_name': citizen.first_name},
-                entity_type='citizen',
-                entity_id=citizen.id,
-                citizen_id=citizen.id,
-                attachments=[
-                    EmailAttachment(
-                        name='island.png',
-                        content_id='cid:island.png',
-                        content=image_b64,
-                        content_type='image/png',
-                    )
-                ],
-            )
-            citizen.edge_mapped_sent = True
-            db.commit()
-            db.refresh(citizen)
-
-        return image_path
 
 
 citizen = CRUDCitizen(models.Citizen)
