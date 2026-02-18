@@ -184,7 +184,7 @@ def initiate_link_request(
                 'verification_code': code,
                 'email': target_email,
                 'initiator_email': initiator_email,
-                'contact_email': 'info@edgecity.live',
+                'contact_email': 'contact@the-mu.xyz',
             },
             entity_type='cluster_join_request',
             entity_id=request.id,

@@ -153,7 +153,7 @@ def generate_invoice_pdf(
         Paragraph(
             'Address: 30 N Gould St, STE R, Sheridan, WY 82801, USA', styles['Body']
         ),
-        Paragraph('Email: Contact@the-mu.xyz', styles['Body']),
+        Paragraph('Email: contact@the-mu.xyz', styles['Body']),
     ]
     right = [
         Paragraph(f'Date: {format_date(payment.created_at)}', styles['Right']),
