@@ -149,9 +149,11 @@ def generate_invoice_pdf(
 
     # Two-column header (seller on left, invoice meta on right)
     left = [
-        Paragraph('Edge Institute Inc', styles['Body']),
-        Paragraph('Address: 1300 S 6th St, Austin, TX 78704', styles['Body']),
-        Paragraph('Email: syl@edgecity.live', styles['Body']),
+        Paragraph('The Mu Global LLC', styles['Body']),
+        Paragraph(
+            'Address: 30 N Gould St, STE R, Sheridan, WY 82801, USA', styles['Body']
+        ),
+        Paragraph('Email: Contact@the-mu.xyz', styles['Body']),
     ]
     right = [
         Paragraph(f'Date: {format_date(payment.created_at)}', styles['Right']),
