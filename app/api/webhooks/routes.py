@@ -65,6 +65,7 @@ async def update_status_webhook(
         logger.info('Processing webhook for application %s %s', row.id, email)
 
         row_dict = row.model_dump()
+        logger.info('Webhook row data: %s', row_dict)
         reviews_status = row_dict.get('calculated_status')
         current_status = row_dict.get('status')
 
