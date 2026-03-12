@@ -49,5 +49,9 @@ def create_payment(
         'reference': reference if reference else {},
         'memo': 'Citizen Portal Payment',
         'notification_url': notification_url,
+        'redirect_urls': {
+            'success_url': settings.FRONTEND_URL,
+            'cancel_url': settings.FRONTEND_URL,
+        }
     }
     return _create_payment_request(body, simplefi_api_key)
