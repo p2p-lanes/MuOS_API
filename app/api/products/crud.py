@@ -26,11 +26,13 @@ class CRUDProduct(
         query = self._apply_filters(query, filters)
 
         if user:
-            allowed_exists = db.query(
-                models.ProductAllowedCitizen.product_id
-            ).filter(
-                models.ProductAllowedCitizen.product_id == models.Product.id,
-            ).correlate(models.Product)
+            allowed_exists = (
+                db.query(models.ProductAllowedCitizen.product_id)
+                .filter(
+                    models.ProductAllowedCitizen.product_id == models.Product.id,
+                )
+                .correlate(models.Product)
+            )
 
             query = query.filter(
                 ~allowed_exists.exists()

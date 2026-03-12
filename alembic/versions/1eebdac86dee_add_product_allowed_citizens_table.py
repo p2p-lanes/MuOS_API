@@ -5,6 +5,7 @@ Revises: 2f75e1a8e3a9
 Create Date: 2026-02-13 16:13:56.660444
 
 """
+
 from typing import Sequence, Union
 
 from alembic import op
@@ -22,8 +23,12 @@ def upgrade() -> None:
     """Upgrade schema."""
     op.create_table(
         'product_allowed_citizens',
-        sa.Column('product_id', sa.Integer(), sa.ForeignKey('products.id'), nullable=False),
-        sa.Column('citizen_id', sa.Integer(), sa.ForeignKey('humans.id'), nullable=False),
+        sa.Column(
+            'product_id', sa.Integer(), sa.ForeignKey('products.id'), nullable=False
+        ),
+        sa.Column(
+            'citizen_id', sa.Integer(), sa.ForeignKey('humans.id'), nullable=False
+        ),
         sa.PrimaryKeyConstraint('product_id', 'citizen_id'),
     )
 
