@@ -52,6 +52,8 @@ def create_payment(
         'redirect_urls': {
             'success_url': settings.FRONTEND_URL,
             'cancel_url': settings.FRONTEND_URL,
-        }
+        },
     }
-    return _create_payment_request(body, simplefi_api_key)
+    response = _create_payment_request(body, simplefi_api_key)
+    response['checkout_url'] = response['checkout_v2_url']
+    return response
